@@ -1,22 +1,27 @@
 name: Java CI with Gradle
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.0.1
+        uses: actions/checkout@v4
       - name: Set up JDK 21
-        uses: actions/setup-java@v3.1.1
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
-      - name: Build
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
         run: ./gradlew build
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.0
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: VanillaMinimaps
-          path: build/libs/vanillaminimaps*.jar
+          path: build/libs/*.jar
